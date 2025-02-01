@@ -5,9 +5,3 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
-
-  # maintain dependencies for git submodules
-  - package-ecosystem: "gitsubmodule"
-    directory: "/"
-    schedule:
-      interval: "monthly"
