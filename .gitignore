@@ -5,4 +5,3 @@
 launch.json
 **/public/**
 .hugo_build.lock
-static/cjn-cv.pdf
