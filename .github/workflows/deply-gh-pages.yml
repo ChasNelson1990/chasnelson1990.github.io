@@ -28,7 +28,7 @@ jobs:
           extended: true
 
       - name: get CV
-        uses: robinraju/release-downloader@v1.8
+        uses: robinraju/release-downloader@v1.9
         with:
           repository: ChasNelson1990/cv
           latest: true
