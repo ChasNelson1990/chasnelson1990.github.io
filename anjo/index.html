@@ -8,17 +8,33 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="/" />
     <meta property="og:image" content="/images/anjo.jpg" />
-    <meta name="description" content="Anjo Nelson is a cute little dog." />1
+    <meta name="description" content="Anjo Nelson is a cute little dog." />
     <base href="" />
     <title>Anjo Nelson</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css" />
+    <script>
+      (function () {
+        try {
+          document.documentElement.setAttribute(
+            "data-theme",
+            localStorage.getItem("chasnelson-theme") === "light" ? "light" : "dark"
+          );
+        } catch (e) {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Courier+Prime:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <link
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
       integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,700" />
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -26,67 +42,84 @@
     <link rel="manifest" href="/manifest.json" />
   </head>
   <body>
-    <div class="wrap">
-      <section class="profile">
+    <header class="topbar">
+      <div class="topbar-links">
+        <a class="topbar-link" href="/">About my human &rarr;</a>
+      </div>
+      <div class="brand">
+        <span class="brand-diamond"></span>
+        <span>Anjo Nelson</span>
+        <span class="brand-diamond"></span>
+      </div>
+      <div class="topbar-actions">
+        <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Toggle light/dark theme"></button>
+      </div>
+    </header>
+
+    <div class="masthead">
+      <div class="masthead-inner">
         <div class="portrait">
-          <a href="/"
-            ><div class="spinner"></div>
-            <div class="img" style="background-image: url(/images/anjo.jpg)"></div
-          ></a>
+          <img class="portrait-img" src="/images/anjo.jpg" alt="Anjo Nelson" />
         </div>
-        <h1 class="name"><b>Anjo Nelson</b></h1>
-        <h2 class="title">95% Angel · 5% Demon</h2>
-        <p class="bio">Looking after me:</p>
-        <br />
-        <span class="bio">
-          <ul>
-            <li>
-              My human will add you to my Tractive account - use tractive to keep tabs on my activity or to find me if I
-              should get lost.
-            </li>
-            <li>
-              Make sure your wifi is added to my Tractive Safe Places - this stops the batteries running down to
-              quickly.
-            </li>
-            <li>
-              I take a tablet every day - it's for my wobbly elbow and I love it when it's wrapped in a bit of cheese or
-              ham. I take this at around 17:45 - but don't give me it if I'm having tummy troubles.
-            </li>
-            <li>
-              I am on one scoop of dry food a day (that's roughly 180 g) - feed it to me in the evenings around 18:45.
-              If I don't eat it straight away don't worry, I will come back to it later.
-            </li>
-            <li>
-              On my food i get a sprinkle of natural joint supplements (about half a teaspoon) - just sprinkle it on top of my bisuits.
-            </li>
-            <li>
-              There's no hard maximum on how many treats I am allowed - but I do have a sensitive tummy so don't go
-              overboard: you will pay the consequences.
-            </li>
-            <li>
-              Speaking of consequences... if I need an emergency wee or poo I will try and tell you: I will come up to
-              you, I won't settle, I may run back and forth to the door if I've worked out where it is and I will get
-              incredibly excited when you start to make "going outside" actions.
-            </li>
-            <li>I love to play with my toys - I have a few favourites but I'm always happy to try new ones.</li>
-            <li>
-              I love to go for walks and I normally go out between 2 and 4 times a day. I'm not a fan of the rain so I
-              might prefer going into the yard for 5 minutes on a very wet day. I'll usually let you know by getting
-              straight in my bed after you put me in my harness.
-            </li>
-          </ul>
-        </span>
-      </section>
-      <section class="actions">
-        <a class="action" href="/">About my human</a>
-        <a class="action" href="/contact">Contact my human</a>
-      </section>
+        <div class="eyebrow">95% Angel &middot; 5% Demon</div>
+        <div class="title-line">Anjo</div>
+        <div class="title-line title-line-bold">Nelson</div>
+        <div class="masthead-rule"><span></span><span>Instructions For Sitters</span><span></span></div>
+      </div>
     </div>
-    <footer class="footer">
-        <p class="copyright">© 2025 Chas Nelson</p>
-        <p class="powered-by">
-          Design based on <a href="https://github.com/posquit0/hugo-awesome-identity" target="_blank">Awesome Identity</a>.
-        </p>
-      </footer>
+
+    <div class="panel">
+      <div class="panel-eyebrow">Looking After Me</div>
+      <div class="panel-rule"></div>
+      <div class="panel-body">
+        <ul>
+          <li>
+            My human will add you to my Tractive account - use tractive to keep tabs on my activity or to find me if
+            I should get lost.
+          </li>
+          <li>
+            Make sure your wifi is added to my Tractive Safe Places - this stops the batteries running down to
+            quickly.
+          </li>
+          <li>
+            I take a tablet every day - it's for my wobbly elbow and I love it when it's wrapped in a bit of cheese
+            or ham. I take this at around 17:45 - but don't give me it if I'm having tummy troubles.
+          </li>
+          <li>
+            I am on one scoop of dry food a day (that's roughly 180 g) - feed it to me in the evenings around 18:45.
+            If I don't eat it straight away don't worry, I will come back to it later.
+          </li>
+          <li>
+            On my food i get a sprinkle of natural joint supplements (about half a teaspoon) - just sprinkle it on
+            top of my bisuits.
+          </li>
+          <li>
+            There's no hard maximum on how many treats I am allowed - but I do have a sensitive tummy so don't go
+            overboard: you will pay the consequences.
+          </li>
+          <li>
+            Speaking of consequences... if I need an emergency wee or poo I will try and tell you: I will come up to
+            you, I won't settle, I may run back and forth to the door if I've worked out where it is and I will get
+            incredibly excited when you start to make "going outside" actions.
+          </li>
+          <li>I love to play with my toys - I have a few favourites but I'm always happy to try new ones.</li>
+          <li>
+            I love to go for walks and I normally go out between 2 and 4 times a day. I'm not a fan of the rain so I
+            might prefer going into the yard for 5 minutes on a very wet day. I'll usually let you know by getting
+            straight in my bed after you put me in my harness.
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chip-row">
+      <a class="chip" href="/">About my human</a>
+      <a class="chip" href="/contact">Contact my human</a>
+    </div>
+
+    <footer>
+      <p>&copy; 2026 Chas Nelson</p>
+    </footer>
+    <script src="/theme.js"></script>
   </body>
 </html>
