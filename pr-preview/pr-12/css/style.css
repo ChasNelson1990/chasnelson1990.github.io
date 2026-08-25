@@ -194,7 +194,10 @@ a:hover { color: var(--maroon); }
   color: var(--soft);
 }
 
+.masthead-title { font: inherit; }
+
 .title-line {
+  display: block;
   font-weight: 300;
   font-size: clamp(28px, 8vw, 44px);
   line-height: 1.05;
