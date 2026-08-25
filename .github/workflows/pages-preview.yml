@@ -84,6 +84,16 @@ jobs:
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      # CNAME only matters at the repo root - GitHub Pages doesn't read a
+      # nested one, so it does nothing for a preview at pr-preview/pr-<n>/.
+      # It's removed here rather than left to be deployed: JamesIves/
+      # github-pages-deploy-action (which this action uses internally)
+      # always preserves any file literally named CNAME, anywhere in the
+      # tree, as a safeguard against losing custom-domain config. Left in,
+      # every PR's preview folder would get its own copy that then
+      # survives clear-preview's removal forever, permanently accumulating
+      # one orphaned pr-preview/pr-<n>/CNAME per PR ever opened.
+      - run: rm -f CNAME
       - uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
         with:
           source-dir: .
