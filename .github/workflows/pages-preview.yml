@@ -1,0 +1,114 @@
+name: Pages deploy + PR previews
+
+# Production (push to main) and PR previews both publish to the same
+# gh-pages branch: main's content lives at the root, each open PR gets its
+# own subfolder at pr-preview/pr-<number>/ (and a comment on the PR linking
+# to it), removed again when the PR closes. This requires GitHub Pages
+# (Settings > Pages > Build and deployment > Source) to be set to
+# "GitHub Actions" - the same build_type camping-gearlist's Pages already
+# runs under with source branch gh-pages, confirmed live by its deployment
+# history matching gh-pages' HEAD commit on every push. As of this workflow
+# being added, this repo's Pages source is still "Deploy from a branch"
+# pointed at main (the classic/legacy builder), so merging this does not
+# yet change what's live - the source switch is a deliberate,
+# separately-verified follow-up once a production run has populated
+# gh-pages.
+#
+# No build step: this is a plain static site (no Jekyll, no Hugo) with
+# everything already committed - deploying is just copying the repo tree,
+# CNAME included.
+#
+# Two separate deploy paths, not one shared step: rossjrw/pr-preview-action's
+# default `action: auto` only ever deploys/removes on pull_request events and
+# is a deliberate no-op on push (per its own action.yml) - reusing it for the
+# main-branch publish would silently do nothing. Production publishing uses
+# JamesIves/github-pages-deploy-action directly instead (the same action
+# pr-preview-action uses internally), with clean-exclude so it never wipes
+# out the pr-preview/ subfolders that PR previews live in.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+
+jobs:
+  deploy-production:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    # All three jobs in this workflow write to the same gh-pages branch via
+    # a force-push (JamesIves/github-pages-deploy-action's default), so two
+    # of them running at once - e.g. a merge's production deploy landing at
+    # the same instant as another PR's close event - can each build their
+    # own local view of gh-pages and clobber the other's just-pushed
+    # commit. All three jobs share this one group, unkeyed by ref or PR
+    # number, so GitHub Actions queues them instead of ever running two at
+    # once. cancel-in-progress is false rather than true: a shared group
+    # with cancellation is what silently dropped production deploys before
+    # (a PR close event killed an in-flight production run rather than
+    # letting either finish) - queueing avoids that failure mode too, at
+    # the cost of a deploy occasionally waiting on an unrelated one ahead
+    # of it in the queue, which is an acceptable trade on a low-traffic
+    # personal site.
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: JamesIves/github-pages-deploy-action@4a3abc783e1a24aeb44c16e869ad83caf6b4cc23 # v4.7.4
+        with:
+          branch: gh-pages
+          folder: .
+          clean-exclude: |
+            pr-preview/**
+
+  deploy-preview:
+    # Fork PRs never have write access to gh-pages (GitHub itself enforces
+    # a read-only GITHUB_TOKEN for pull_request-triggered runs from a fork),
+    # so without this guard the job would just run and fail noisily on
+    # every fork PR instead of being skipped.
+    if: >
+      github.event_name == 'pull_request' && github.event.action != 'closed' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    # Same shared group as deploy-production - see the comment there. This
+    # queues preview deploys behind production and behind each other rather
+    # than letting concurrent force-pushes to gh-pages clobber one another.
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
+        with:
+          source-dir: .
+          # action:auto only deploys on opened/synchronize (not reopened) -
+          # this job's own `if:` above already excludes closed, so every
+          # event that reaches this step should deploy.
+          action: deploy
+
+  clear-preview:
+    # Same same-repo guard as deploy-preview above - a fork PR's preview was
+    # never deployed in the first place, so there's nothing for this job to
+    # (or permission to) remove.
+    if: >
+      github.event_name == 'pull_request' && github.event.action == 'closed' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    # Same shared group as deploy-production - see the comment there.
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
+        with:
+          action: remove
