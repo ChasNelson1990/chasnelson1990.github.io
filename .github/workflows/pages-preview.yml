@@ -109,9 +109,11 @@ jobs:
           # segment. Left unset, the posted link would 404 with a
           # duplicated path (.github.io/chasnelson1990.github.io/...).
           # Pinned to the custom domain specifically (rather than the bare
-          # https://chasnelson1990.github.io) so the posted link matches
-          # what visitors actually land on.
-          pages-base-url: https://www.chasnelson.co.uk
+          # chasnelson1990.github.io) so the posted link matches what
+          # visitors actually land on. No scheme here - the action adds
+          # its own "https://" in front of this value, so including one
+          # here doubles it up (https://https://...).
+          pages-base-url: www.chasnelson.co.uk
 
   clear-preview:
     # Same same-repo guard as deploy-preview above - a fork PR's preview was
