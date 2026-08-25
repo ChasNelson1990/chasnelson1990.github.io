@@ -4,11 +4,15 @@ name: Pages deploy + PR previews
 # gh-pages branch: main's content lives at the root, each open PR gets its
 # own subfolder at pr-preview/pr-<number>/ (and a comment on the PR linking
 # to it), removed again when the PR closes. This requires GitHub Pages
-# (Settings > Pages) to be configured to serve from gh-pages / - as of this
-# workflow being added, Pages is still serving straight from the main
-# branch (the classic/legacy builder), so merging this does not yet change
-# what's live. The Pages source gets switched to gh-pages in a deliberate,
-# separately-verified follow-up once a production run has populated it.
+# (Settings > Pages > Build and deployment > Source) to be set to
+# "GitHub Actions" - the same build_type camping-gearlist's Pages already
+# runs under with source branch gh-pages, confirmed live by its deployment
+# history matching gh-pages' HEAD commit on every push. As of this workflow
+# being added, this repo's Pages source is still "Deploy from a branch"
+# pointed at main (the classic/legacy builder), so merging this does not
+# yet change what's live - the source switch is a deliberate,
+# separately-verified follow-up once a production run has populated
+# gh-pages.
 #
 # No build step: this is a plain static site (no Jekyll, no Hugo) with
 # everything already committed - deploying is just copying the repo tree,
