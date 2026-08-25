@@ -308,6 +308,14 @@ a:hover { color: var(--maroon); }
 }
 .role-list .role-tag.role-tag-past { color: var(--rose); }
 
+.role-section-label {
+  margin: 1.1rem 0 .6rem;
+  font: 400 .62rem/1 'Courier Prime', monospace;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
 /* ---------------------------------------------------------------------
    Contact icons / action chips
    --------------------------------------------------------------------- */
