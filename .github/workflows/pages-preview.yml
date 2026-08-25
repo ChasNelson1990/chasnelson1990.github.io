@@ -101,6 +101,17 @@ jobs:
           # this job's own `if:` above already excludes closed, so every
           # event that reaches this step should deploy.
           action: deploy
+          # Left unset, the action builds its preview-link comment as
+          # https://{owner}.github.io/{repo}/pr-preview/pr-<n>/ - correct
+          # for an ordinary project repo, but this repo is now named
+          # chasnelson1990.github.io (GitHub's special "user site" name),
+          # which Pages serves at the bare domain root with no /{repo}/
+          # segment. Left unset, the posted link would 404 with a
+          # duplicated path (.github.io/chasnelson1990.github.io/...).
+          # Pinned to the custom domain specifically (rather than the bare
+          # https://chasnelson1990.github.io) so the posted link matches
+          # what visitors actually land on.
+          pages-base-url: https://www.chasnelson.co.uk
 
   clear-preview:
     # Same same-repo guard as deploy-preview above - a fork PR's preview was
