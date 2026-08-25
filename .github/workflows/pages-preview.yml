@@ -34,17 +34,23 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    # Merging a PR fires a `push` to main and a `pull_request: closed` event
-    # at the same instant. A concurrency group shared with the preview jobs
-    # below would race this against that PR's deploy-preview/clear-preview
-    # run - with cancel-in-progress, one of the two gets killed at random,
-    # which can silently drop a production deploy. Keyed only on the job
-    # name, not github.ref, so it still does its one useful job of
-    # cancelling a stale in-flight production deploy when a newer push to
-    # main supersedes it.
+    # All three jobs in this workflow write to the same gh-pages branch via
+    # a force-push (JamesIves/github-pages-deploy-action's default), so two
+    # of them running at once - e.g. a merge's production deploy landing at
+    # the same instant as another PR's close event - can each build their
+    # own local view of gh-pages and clobber the other's just-pushed
+    # commit. All three jobs share this one group, unkeyed by ref or PR
+    # number, so GitHub Actions queues them instead of ever running two at
+    # once. cancel-in-progress is false rather than true: a shared group
+    # with cancellation is what silently dropped production deploys before
+    # (a PR close event killed an in-flight production run rather than
+    # letting either finish) - queueing avoids that failure mode too, at
+    # the cost of a deploy occasionally waiting on an unrelated one ahead
+    # of it in the queue, which is an acceptable trade on a low-traffic
+    # personal site.
     concurrency:
-      group: pages-production
-      cancel-in-progress: true
+      group: pages-deploy
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: JamesIves/github-pages-deploy-action@4a3abc783e1a24aeb44c16e869ad83caf6b4cc23 # v4.7.4
@@ -66,13 +72,12 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    # Keyed per-PR (not on github.ref, and not shared with deploy-production)
-    # so a rapid second push to the same PR cancels the first preview deploy
-    # instead of racing it, without ever contending with production or other
-    # PRs' preview jobs - see the comment on deploy-production's group above.
+    # Same shared group as deploy-production - see the comment there. This
+    # queues preview deploys behind production and behind each other rather
+    # than letting concurrent force-pushes to gh-pages clobber one another.
     concurrency:
-      group: pages-preview-${{ github.event.pull_request.number }}
-      cancel-in-progress: true
+      group: pages-deploy
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
@@ -94,12 +99,10 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    # Same per-PR group as deploy-preview above (not shared with
-    # deploy-production) - this is the other half of the fix for the race
-    # that can otherwise silently drop production deploys on merge.
+    # Same shared group as deploy-production - see the comment there.
     concurrency:
-      group: pages-preview-${{ github.event.pull_request.number }}
-      cancel-in-progress: true
+      group: pages-deploy
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
