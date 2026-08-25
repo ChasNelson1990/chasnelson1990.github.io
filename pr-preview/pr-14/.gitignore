@@ -1,7 +1,0 @@
-**/cgi-bin/
-**/.well-known/
-.htaccess
-**/_gen/**
-launch.json
-**/public/**
-.hugo_build.lock
