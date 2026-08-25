@@ -1,282 +1,418 @@
+/* Jost/Courier Prime are loaded via a <link rel="stylesheet"> in each
+   page's <head>, not an @import here - @import can't be discovered by the
+   browser's preload scanner until this whole file has downloaded and been
+   parsed, adding a fully sequential extra round-trip that the <link> tags
+   (alongside the preconnect hints already there) avoid. */
+
+:root {
+  /* Dark is the default look (set explicitly by theme.js, with this bare
+     block as the no-JS fallback) - light lives behind [data-theme="light"].
+     Palette names match the "vintage travel ledger" design this site
+     shares with camping-gearlist: paper/card are the two background
+     tones, ink/soft are the two text tones, rule/hairline are the two
+     border weights, ochre/teal/maroon/rose are accent roles. */
+  --paper: #1A211F;
+  --card: #232B28;
+  --ink: #EFE3CB;
+  --soft: #98A598;
+  --rule: #3E4A46;
+  --hairline: #2C3531;
+  --ochre: #D9A046;
+  --rose: #C98585;
+  --teal: #84B6B0;
+  --maroon: #C4685A;
+  --hover: #2C3531;
+}
+
+:root[data-theme="dark"] {
+  --paper: #1A211F;
+  --card: #232B28;
+  --ink: #EFE3CB;
+  --soft: #98A598;
+  --rule: #3E4A46;
+  --hairline: #2C3531;
+  --ochre: #D9A046;
+  --rose: #C98585;
+  --teal: #84B6B0;
+  --maroon: #C4685A;
+  --hover: #2C3531;
+}
+
+:root[data-theme="light"] {
+  --paper: #F2E8D5;
+  --card: #FBF4E4;
+  --ink: #2E2A25;
+  --soft: #8A7A63;
+  --rule: #C9B896;
+  --hairline: #EBDFC4;
+  --ochre: #E0A33E;
+  --rose: #D98C8C;
+  --teal: #6E9E9A;
+  --maroon: #9E4B3F;
+  --hover: #F0E4C9;
+}
+
 * {
-    margin: 0;
-    padding: 0
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 html,
 body {
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 300;
-    font-size: 1rem;
-    color: #333;
-    height: 100%
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Jost', Futura, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight: 300;
+  -webkit-text-size-adjust: 100%;
+  height: 100%;
 }
 
 body {
-    display: flex;
-    flex-direction: column
-}
-
-.wrap {
-    flex: 1 0 auto;
-    width: 92%;
-    margin: 0 auto;
-    margin-top: 5em
-}
-
-@media only screen and (min-width: 1024px) {
-    .wrap {
-        width: 1024px
-    }
+  max-width: 940px;
+  margin: 0 auto;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 2rem;
 }
 
 a {
-    color: #2c7c94;
-    text-decoration: none;
-    -webkit-transition: color 0.5s;
-    transition: color 0.5s
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s;
 }
-
-a:visited,
-a:hover,
-a:active {
-    text-decoration: none
-}
+a:hover { color: var(--maroon); }
 
 ::selection {
-    background-color: #2c7c94;
-    color: white
+  background-color: var(--maroon);
+  color: var(--card);
 }
 
-::-moz-selection {
-    background-color: #2c7c94;
-    color: white
+.mono { font-family: 'Courier Prime', monospace; }
+
+/* ---------------------------------------------------------------------
+   Topbar / brand
+   --------------------------------------------------------------------- */
+
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem 1rem;
+  padding: 1.4rem 1rem .5rem;
 }
 
-.footer {
-    flex-shrink: 0;
-    width: 92%;
-    height: auto;
-    box-sizing: border-box;
-    color: #535358;
-    font-size: 0.8rem;
-    text-align: center;
-    text-transform: uppercase;
-    margin: 0 auto;
-    padding-top: 18px;
-    padding-bottom: 18px;
-    border: 0;
-    border-top: 1px solid #f9f9fb
+.topbar-links,
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: .6rem 1rem;
+  flex: 0 0 auto;
 }
 
-@media only screen and (min-width: 1024px) {
-    .footer {
-        width: 1024px
-    }
+.topbar-links { order: 0; }
+.topbar-actions { order: 2; }
+
+.topbar-link {
+  font: 400 .7rem/1 'Courier Prime', monospace;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: .2rem;
+  white-space: nowrap;
+}
+.topbar-link:hover { border-bottom-color: var(--maroon); }
+
+.brand {
+  order: 1;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  font: 500 .7rem/1 Jost, sans-serif;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--soft);
 }
 
-.footer p {
-    margin-top: 0.4em;
-    margin-bottom: 0.4em
+.brand-diamond {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  background: var(--maroon);
+  transform: rotate(45deg);
 }
 
-.footer a:hover {
-    color: #535358
+.theme-toggle {
+  border: 1px solid var(--rule);
+  background: var(--card);
+  color: var(--ink);
+  padding: .35rem .7rem;
+  font: 400 .62rem/1 'Courier Prime', monospace;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  -webkit-tap-highlight-color: transparent;
+}
+.theme-toggle::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ochre);
+  flex: 0 0 auto;
+}
+.theme-toggle:hover { border-color: var(--maroon); }
+
+/* ---------------------------------------------------------------------
+   Masthead
+   --------------------------------------------------------------------- */
+
+.masthead {
+  margin: 0 1rem 1.4rem;
+  border: 2px solid var(--ink);
+  padding: 7px;
+  background: var(--card);
 }
 
-.profile {
-    text-align: center
+.masthead-inner {
+  border: 1px solid var(--rule);
+  padding: 1.6rem 1.2rem 1.4rem;
+  text-align: center;
 }
 
-.profile .portrait {
-    position: relative;
-    max-width: 10rem;
-    margin: 0.6em auto
+.eyebrow {
+  font: 400 .62rem/1 'Courier Prime', monospace;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--soft);
 }
 
-.profile .portrait .spinner {
-    width: 10rem;
-    height: 10rem;
-    border: 0.5em solid #535358;
-    border-right-color: #2c7c94;
-    border-bottom-color: #2c7c94;
-    border-radius: 50%;
-    -webkit-transition: transform 0.8s ease-in-out;
-    -moz-transition: transform 0.8s ease-in-out;
-    transition: transform 0.8s ease-in-out
+.masthead-title { font: inherit; }
+
+.title-line {
+  display: block;
+  font-weight: 300;
+  font-size: clamp(28px, 8vw, 44px);
+  line-height: 1.05;
+  font-family: Jost, sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.title-line.title-line-bold { font-weight: 500; }
+.title-line:first-of-type { margin-top: .8rem; }
+
+.masthead-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .7rem;
+  margin-top: 1rem;
+}
+.masthead-rule span:first-child,
+.masthead-rule span:last-child {
+  width: 40px;
+  height: 1px;
+  background: var(--rule);
+}
+.masthead-rule span:nth-child(2) {
+  font-size: .62rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--soft);
+  white-space: nowrap;
 }
 
-.profile .portrait:hover .spinner {
-    -webkit-transform: rotate(180deg);
-    -moz-transform: rotate(180deg);
-    -ms-transform: rotate(180deg);
-    -o-transform: rotate(180deg);
-    transform: rotate(180deg)
+/* Portrait photo - a bordered square rather than the old circular
+   spinner treatment, matching the ledger's sharp-cornered, framed-photo
+   language (masthead border, panel borders, tally-cell dividers). */
+.portrait {
+  width: 8rem;
+  height: 8rem;
+  margin: 0 auto 1rem;
+  border: 1px solid var(--rule);
+  padding: 5px;
+  background: var(--paper);
+}
+.portrait-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.profile .portrait .img {
-    position: absolute;
-    width: 100%;
-    top: 0.5em;
-    bottom: 0.5em;
-    left: 0.5em;
-    right: 0;
-    background-position: center;
-    background-size: cover;
-    border-radius: 50%;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%
+.pronouns {
+  margin-top: .3rem;
+  font: 400 .68rem/1 'Courier Prime', monospace;
+  letter-spacing: .1em;
+  color: var(--soft);
 }
 
-.profile .name {
-    font-family: Roboto, sans-serif;
-    font-weight: 100;
-    font-size: 2rem;
-    margin: 0.2em auto;
-    color: #535358
+/* ---------------------------------------------------------------------
+   Panels
+   --------------------------------------------------------------------- */
+
+.panel {
+  margin: 0 1rem 1.1rem;
+  border: 1px solid var(--rule);
+  background: var(--card);
 }
 
-.profile .name b {
-    font-weight: bold;
-    color: #333
+.panel-eyebrow {
+  text-align: center;
+  padding: .8rem 0 .2rem;
+  font: 400 .62rem/1 'Courier Prime', monospace;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--soft);
 }
 
-.profile .title {
-    font-family: 'Source Sans Pro', sans-serif;
-    font-size: 1rem;
-    font-variant: small-caps;
-    font-weight: 400;
-    color: #2c7c94;
-    margin: 0.8em auto
+.panel-rule { height: 1px; background: var(--rule); margin-top: .8rem; }
+
+.panel-body {
+  padding: 1.1rem 1.2rem 1.3rem;
+  font-size: .92rem;
+  line-height: 1.6;
 }
+.panel-body p + p { margin-top: .9rem; }
+.panel-body a { border-bottom: 1px solid var(--rule); }
+.panel-body a:hover { border-bottom-color: var(--maroon); }
 
-.profile .bio {
-    font-size: 0.9rem
+.panel-body ul {
+  padding-left: 1.2rem;
 }
+.panel-body li + li { margin-top: .6rem; }
 
-.profile .bio p {
-    margin-top: 0.9em
+.role-list {
+  list-style: none;
+  padding: 0;
 }
-
-.profile .bio a:hover {
-    color: initial
+.role-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 .5rem;
 }
-
-.profile .bio ul {
-    margin: auto;
-    width: 80%;
-    max-width: 800px;
-    text-align: justify;
-    line-height: 1.2rem;
+.role-list li + li { margin-top: .9rem; }
+.role-list .role-tag {
+  font: 400 .62rem/1 'Courier Prime', monospace;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--soft);
 }
+.role-list .role-tag.role-tag-past { color: var(--rose); }
 
-@media only screen and (min-width: 720px) {
-    .profile .portrait {
-        max-width: 11rem
-    }
-
-    .profile .portrait .spinner {
-        width: 11rem;
-        height: 11rem
-    }
-
-    .profile .name {
-        font-size: 2.4rem
-    }
-
-    .profile .title {
-        font-size: 1.1rem
-    }
-}
-
-@media only screen and (min-width: 1024px) {
-    .profile .portrait {
-        max-width: 12rem
-    }
-
-    .profile .portrait .spinner {
-        width: 12rem;
-        height: 12rem
-    }
-
-    .profile .name {
-        font-size: 2.5rem
-    }
-
-    .profile .title {
-        font-size: 1.2rem
-    }
-}
+/* ---------------------------------------------------------------------
+   Contact icons / action chips
+   --------------------------------------------------------------------- */
 
 .contacts {
-    margin: 2.2rem auto;
-    text-align: center;
-    font-size: 1.2rem
+  margin: 0 1rem 1.1rem;
+  display: flex;
+  justify-content: center;
+  gap: .8rem;
 }
 
-.contacts .contact {
-    display: inline-block;
-    width: 2.2em;
-    height: 2.2em;
-    line-height: 2.2em;
-    margin-left: 0.5em;
-    margin-right: 0.5em;
-    background: #f9f9fb;
-    border-radius: 100%;
-    color: #535358;
-    text-align: center;
-    -webkit-transition: all 0.3s ease-in-out;
-    -moz-transition: all 0.3s ease-in-out;
-    transition: all 0.3s ease-in-out
+.contact-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid var(--rule);
+  color: var(--ink);
+}
+.contact-icon:hover {
+  border-color: var(--maroon);
+  color: var(--maroon);
 }
 
-.contacts .contact:hover {
-    background: #2c7c94;
-    color: #fff;
-    box-shadow: 0 0 1px 7px rgba(44, 124, 148, 0.15);
-    position: relative
+.chip-row {
+  margin: 0 1rem 1.4rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  justify-content: center;
 }
 
-.actions {
-    margin: 3em auto;
-    text-align: center;
-    font-size: 1rem
+.chip {
+  font: 500 .68rem/1 Jost, sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: .6rem 1rem;
+  border: 1px solid var(--rule);
+  background: none;
+  color: var(--ink);
+}
+.chip:hover { border-color: var(--maroon); color: var(--maroon); }
+
+/* ---------------------------------------------------------------------
+   Contact form
+   --------------------------------------------------------------------- */
+
+.form-panel .panel-body { padding-top: 1.3rem; }
+
+.form-field { margin-bottom: 1.2rem; }
+.form-field:last-of-type { margin-bottom: 1.4rem; }
+
+.form-label {
+  display: block;
+  margin-bottom: .4rem;
+  font: 400 .62rem/1 'Courier Prime', monospace;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--soft);
 }
 
-.actions .action {
-    position: relative;
-    display: inline-block;
-    margin: 1.2em 1.2em;
-    width: 11em;
-    height: 2em;
-    line-height: 2em;
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 700;
-    color: #333
+.form-input,
+.form-textarea {
+  display: block;
+  width: 100%;
+  font: 300 .92rem/1.4 'Jost', sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: .7rem .8rem;
 }
-
-.actions .action:after {
-    content: "";
-    transition: 0.5s all ease;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    position: absolute
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--maroon);
 }
+.form-textarea { resize: vertical; }
 
-.actions .action:after {
-    width: 100%;
-    height: 2px;
-    left: 50%;
-    bottom: -0.3em;
-    background: #389dbb;
-    -webkit-transform: translateX(-50%);
-    transform: translateX(-50%)
+.form-submit {
+  font: 500 .7rem/1 Jost, sans-serif;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: none;
+  border: 1px solid var(--rule);
+  padding: .7rem 1.4rem;
+  cursor: pointer;
 }
+.form-submit:hover { border-color: var(--maroon); color: var(--maroon); }
 
-.actions .action:hover:after {
-    width: 0
+/* ---------------------------------------------------------------------
+   Footer
+   --------------------------------------------------------------------- */
+
+footer {
+  margin-top: auto;
+  padding: 1rem 1rem 1.4rem;
+  text-align: center;
+  font: 400 .72rem/1.8 'Courier Prime', monospace;
+  color: var(--soft);
 }
+footer a { border-bottom: 1px solid var(--rule); }
+footer a:hover { border-bottom-color: var(--maroon); }
 
-.actions .action:hover {
-    color: #666
+@media only screen and (min-width: 720px) {
+  .portrait { width: 9rem; height: 9rem; }
 }
