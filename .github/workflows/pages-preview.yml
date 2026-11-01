@@ -94,7 +94,7 @@ jobs:
       # survives clear-preview's removal forever, permanently accumulating
       # one orphaned pr-preview/pr-<n>/CNAME per PR ever opened.
       - run: rm -f CNAME
-      - uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
+      - uses: rossjrw/pr-preview-action@873417d2df72380da1f3978378fb58560bcde976 # v1.8.2
         with:
           source-dir: .
           # action:auto only deploys on opened/synchronize (not reopened) -
@@ -132,6 +132,6 @@ jobs:
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
+      - uses: rossjrw/pr-preview-action@873417d2df72380da1f3978378fb58560bcde976 # v1.8.2
         with:
           action: remove
