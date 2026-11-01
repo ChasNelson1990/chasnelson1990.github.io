@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Dr Chas Nelson - International Data Consultant</title>
+        <link>/</link>
+        <description>Recent content on Dr Chas Nelson - International Data Consultant</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-gb</language>
+        <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+        <item>
+            <title>Contact Chas Nelson</title>
+            <link>/contact/</link>
+            <pubDate>Mon, 11 May 2020 18:18:53 +0100</pubDate>
+            <guid>/contact/</guid>
+            <description> Full Name Email Address Message</description>
+        </item>
+    </channel>
+</rss>
